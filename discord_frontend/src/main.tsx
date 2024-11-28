@@ -5,26 +5,40 @@ import App from './App.tsx'
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react"
-import { Routes, useNavigate } from "react-router-dom"
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
+
+import HomePage from './pages/HomePage.tsx';
+import RootLayout from './layouts/RootLayout.tsx';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  <>
-    <SignedIn>{children}</SignedIn>
-    <SignedOut>
-      <RedirectToSignIn />
-    </SignedOut>
-  </>
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
+  )
 }
 
 const RouterComponent = () => {
   const navigate = useNavigate();
 
   return (
-    <ClerkProvider publishableKey={process.env.VITE_CLERK_PUBLISHABLE_KEY} 
+    <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY} 
       navigate={(to) => navigate(to)}
     >
       <Routes>
-        
+        <Route path='' element={<RootLayout />}>
+          <Route 
+            index
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
       </Routes>
     </ClerkProvider>
   )
@@ -33,7 +47,12 @@ const RouterComponent = () => {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <MantineProvider>
-      <App />
+      <BrowserRouter>
+        <RouterComponent />
+      </BrowserRouter>
     </MantineProvider>
   </StrictMode>,
 )
+
+
+export default RouterComponent
