@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ServerService } from './server.service';
 import { ServerResolver } from './server.resolver';
+import { PrismaService } from 'src/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  providers: [ServerService, ServerResolver]
+  providers: [ServerService, ServerResolver, PrismaService, JwtService, ConfigService],
 })
 export class ServerModule {}

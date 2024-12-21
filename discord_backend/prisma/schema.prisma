@@ -30,7 +30,7 @@ model Profile {
 model Server {
   id         Int     @id @default(autoincrement())
   name       String
-  imgUrl     String
+  imageUrl   String
   inviteCode String  @unique
   profileId  Int
   profile    Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -52,6 +52,7 @@ enum MemberRole {
 
 model Member {
   id        Int     @id @default(autoincrement())
+  role      MemberRole @default(GUEST)
   profileId Int
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
